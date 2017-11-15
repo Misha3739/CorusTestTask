@@ -11,13 +11,15 @@ namespace CORUS_TestTask
 {
     class Program
     {
-      static  string s_fileName = $@"C:\CorusTest\File_{DateTime.Now.ToString("yyyy.MM.dd_HH.mm.ss")}.xml";
+      static  string s_fileName = $@"C:\CorusTest\File_{new DateTime(2017,11,15,14,20,00).ToString("yyyy.MM.dd_HH.mm.ss")}.xml";
         static void Main(string[] args)
         {
             var collection = GetCollection();
-            WriteToFile(collection);
-            var collectionFromFile = GetFromFile();
-            PrintCollection(collectionFromFile);
+            //WriteToFile(collection);
+            //var collectionFromFile = GetFromFile();
+            //PrintCollection(collectionFromFile);
+
+            PrintGrouped();
             Console.ReadLine();
         }
         #region File
@@ -74,8 +76,22 @@ namespace CORUS_TestTask
         private static void PrintGrouped()
         {
             var collection = GetCollection();
-           
 
+            var result = collection.GroupBy(p => p.EndDate).Select(p => new Pallet()
+            {
+                Boxes = collection.
+                Where(c => c.EndDate == p.Key.Value).
+                SelectMany(b => b.Boxes).OrderBy(b => b.Weight).ToList()
+            });
+
+            foreach (var item in result)
+            {
+                Console.WriteLine($"Pallet with end date: {item.EndDate} and boxes:");
+                foreach (var box in item.Boxes)
+                {
+                    Console.WriteLine(ReflectionUtils.ToString(box));
+                }
+            }
         }
 
         private static IEnumerable<Pallet> GetCollection()
@@ -98,7 +114,7 @@ namespace CORUS_TestTask
                         Width =  rnd.NextDouble(),
                         Depth =  rnd.NextDouble(),
                         Weight =  rnd.NextDouble(),
-                        ProductionDate = DateTime.Now.AddDays(-10)
+                        ProductionDate = new DateTime(2017,11,15,14,20,00).AddDays(-20)
                     },
                        new Box() {
                             Id = 12,
@@ -106,7 +122,7 @@ namespace CORUS_TestTask
                         Width =  rnd.NextDouble(),
                         Depth =  rnd.NextDouble(),
                         Weight =  rnd.NextDouble(),
-                        ProductionDate = DateTime.Now.AddDays(-40)
+                        ProductionDate = new DateTime(2017,11,15,14,20,00).AddDays(-40)
                     },
 
                         new Box() {
@@ -115,7 +131,7 @@ namespace CORUS_TestTask
                         Width =  rnd.NextDouble(),
                         Depth =  rnd.NextDouble(),
                         Weight =  rnd.NextDouble(),
-                        ProductionDate = DateTime.Now.AddDays(-60)
+                        ProductionDate = new DateTime(2017,11,15,14,20,00).AddDays(-70)
                     }
                 }
 
@@ -135,7 +151,7 @@ namespace CORUS_TestTask
                         Width =  rnd.NextDouble(),
                         Depth =  rnd.NextDouble(),
                         Weight =  rnd.NextDouble(),
-                        ProductionDate = DateTime.Now.AddDays(-30)
+                        ProductionDate = new DateTime(2017,11,15,14,20,00).AddDays(-20)
                     },
                        new Box() {
                             Id = 22,
@@ -143,7 +159,7 @@ namespace CORUS_TestTask
                         Width =  rnd.NextDouble(),
                         Depth =  rnd.NextDouble(),
                         Weight =  rnd.NextDouble(),
-                         ProductionDate = DateTime.Now.AddDays(-50)
+                         ProductionDate = new DateTime(2017,11,15,14,20,00).AddDays(-50)
                     },
 
                         new Box() {
@@ -152,7 +168,7 @@ namespace CORUS_TestTask
                         Width =  rnd.NextDouble(),
                         Depth =  rnd.NextDouble(),
                         Weight =  rnd.NextDouble(),
-                         ProductionDate = DateTime.Now.AddDays(-70)
+                         ProductionDate = new DateTime(2017,11,15,14,20,00).AddDays(-70)
                     }
                     }
                 },
@@ -171,7 +187,7 @@ namespace CORUS_TestTask
                         Width =  rnd.NextDouble(),
                         Depth =  rnd.NextDouble(),
                         Weight =  rnd.NextDouble(),
-                         ProductionDate = DateTime.Now.AddDays(-10)
+                         ProductionDate = new DateTime(2017,11,15,14,20,00).AddDays(-10)
                     },
                        new Box() {
                             Id =32,
@@ -179,7 +195,7 @@ namespace CORUS_TestTask
                         Width =  rnd.NextDouble(),
                         Depth =  rnd.NextDouble(),
                         Weight =  rnd.NextDouble(),
-                         ProductionDate = DateTime.Now.AddDays(-3)
+                         ProductionDate = new DateTime(2017,11,15,14,20,00).AddDays(-3)
                     },
 
                         new Box() {
@@ -188,7 +204,7 @@ namespace CORUS_TestTask
                         Width =  rnd.NextDouble(),
                         Depth =  rnd.NextDouble(),
                         Weight =  rnd.NextDouble(),
-                         ProductionDate = DateTime.Now.AddDays(-20)
+                         ProductionDate = new DateTime(2017,11,15,14,20,00).AddDays(-70)
                     }
                     }
                   }
