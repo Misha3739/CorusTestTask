@@ -15,13 +15,17 @@ namespace CORUS_TestTask
         static void Main(string[] args)
         {
             var collection = GetCollection();
-            //WriteToFile(collection);
-            //var collectionFromFile = GetFromFile();
-            //PrintCollection(collectionFromFile);
-
+            //Call task 1
+            WriteToFile(collection);
+            var collectionFromFile = GetFromFile();
+            PrintCollection(collectionFromFile);
+            //Call task 2
             PrintGrouped();
+            //Call task3
+            PrintMaxDate();
             Console.ReadLine();
         }
+        //Part1
         #region File
         private static void WriteToFile(IEnumerable<Pallet> collection)
         {
@@ -72,7 +76,7 @@ namespace CORUS_TestTask
                 Console.WriteLine(ReflectionUtils.ToString(pal));
             }
         }
-
+        //Part2
         private static void PrintGrouped()
         {
             var collection = GetCollection();
@@ -82,6 +86,26 @@ namespace CORUS_TestTask
                 Boxes = collection.
                 Where(c => c.EndDate == p.Key.Value).
                 SelectMany(b => b.Boxes).OrderBy(b => b.Weight).ToList()
+            });
+
+            foreach (var item in result)
+            {
+                Console.WriteLine($"Pallet with end date: {item.EndDate} and boxes:");
+                foreach (var box in item.Boxes)
+                {
+                    Console.WriteLine(ReflectionUtils.ToString(box));
+                }
+            }
+        }
+
+        //Part3
+        private static void PrintMaxDate()
+        {
+            var collection = GetCollection();
+
+            var result = collection.OrderByDescending(n => n.EndDate).Take(3).Select(p => new Pallet()
+            {
+                Boxes = p.Boxes.OrderBy(b => b.Dimension).ToList()
             });
 
             foreach (var item in result)
